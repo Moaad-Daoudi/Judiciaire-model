@@ -1,0 +1,23 @@
+# --- Python Environment & Junk ---
+venv/
+ai-env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+.env
+
+# --- Large AI Models (Crucial: Do not commit these!) ---
+models/
+vector_database/
+
+# --- Node/Frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# --- Logs & Metadata ---
+*.log
+*.sqlite3
+*:Zone.Identifier
