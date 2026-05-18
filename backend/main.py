@@ -1,50 +1,38 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import uvicorn
-import traceback
 from rag import LegalRAGPipeline
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], 
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize global pipeline
-try:
-    print("Loading AI Brain... this may take a minute.")
-    bot = LegalRAGPipeline()
-    if bot.collection.count() == 0:
-        bot.ingest_pdfs() 
-    print("AI is ready!")
-except Exception as e:
-    print("CRITICAL ERROR LOADING MODEL:")
-    print(traceback.format_exc())
-    bot = None
+# Initialize the pipeline
+print("Loading Model... this might take a moment.")
+rag_pipeline = LegalRAGPipeline()
+print("Model Ready!")
 
 class ChatRequest(BaseModel):
     message: str
 
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
-    if bot is None:
-        raise HTTPException(status_code=500, detail="AI Model failed to load.")
-    
     try:
-        user_query = request.message
-        # Simple logging to see the query in terminal
-        print(f"User asked: {user_query}")
-        
-        answer = bot.generate_answer(user_query)
-        return {"reply": answer}
+        reply = rag_pipeline.generate_answer(request.message)
+        # Note: You might need to clean the reply string to remove the prompt part
+        # since model.generate often includes the input.
+        return {"reply": reply}
     except Exception as e:
-        print("ERROR DURING GENERATION:")
-        print(traceback.format_exc())
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
+    import uvicorn
+    # Run the API on port 8000
     uvicorn.run(app, host="0.0.0.0", port=8000)

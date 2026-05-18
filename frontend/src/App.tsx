@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import Sidebar from '@/components/SideBar';
 import InputArea from '@/components/InputArea';
 import { FileText, Gavel, Search } from 'lucide-react';
+import rtlDetect from 'rtl-detect';
 
 interface Message {
   role: 'user' | 'ai';
@@ -13,7 +14,7 @@ function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [darkMode, setDarkMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   // Ref for auto-scrolling
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -64,7 +65,7 @@ function App() {
   return (
     <div className="flex h-screen bg-slate-50 text-slate-800 dark:bg-[#0f172a] dark:text-slate-100 transition-colors duration-200">
       <Sidebar darkMode={darkMode} setDarkMode={setDarkMode} />
-      
+
       <main className="flex-1 flex flex-col overflow-hidden">
         {messages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8">
@@ -82,23 +83,29 @@ function App() {
           </div>
         ) : (
           <div className="flex-1 p-8 overflow-y-auto space-y-6">
-            {messages.map((msg, index) => (
-              <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`p-4 rounded-xl max-w-[80%] shadow-sm ${msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700'}`}>
-                  {/* Markdown rendering handles bolding and newlines */}
-                  <ReactMarkdown>
-                    {msg.content}
-                  </ReactMarkdown>
+            {messages.map((msg, index) => {
+              const isRtl = rtlDetect.isRtlLang(rtlDetect.getLangDir(msg.content) || (msg.content.match(/[\u0600-\u06FF]/) ? 'ar' : 'en'));
+              return (
+                <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div
+                    className={`p-4 rounded-xl max-w-[80%] shadow-sm ${msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700'}`}
+                    dir={isRtl ? 'rtl' : 'ltr'}
+                  >
+                    {/* Markdown rendering handles bolding and newlines */}
+                    <ReactMarkdown>
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {isLoading && (
               <div className="flex justify-start animate-pulse text-slate-400">AI is searching the laws...</div>
             )}
             <div ref={messagesEndRef} />
           </div>
         )}
-        <InputArea onSend={handleSendMessage}/>
+        <InputArea onSend={handleSendMessage} />
       </main>
     </div>
   );
