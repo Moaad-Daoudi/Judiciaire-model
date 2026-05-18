@@ -21,7 +21,7 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
             <MessageSquare size={18} /> New Chat
           </div>
           {/* Standard Items */}
-          <div className="hover:bg-slate-50 dark:hover:bg-[#1e293b] p-3 rounded-lg cursor-pointer flex items-center gap-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">
+          {/* <div className="hover:bg-slate-50 dark:hover:bg-[#1e293b] p-3 rounded-lg cursor-pointer flex items-center gap-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">
             <History size={18} /> History
           </div>
           <div className="hover:bg-slate-50 dark:hover:bg-[#1e293b] p-3 rounded-lg cursor-pointer flex items-center gap-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">
@@ -32,7 +32,7 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
           </div>
           <div className="hover:bg-slate-50 dark:hover:bg-[#1e293b] p-3 rounded-lg cursor-pointer flex items-center gap-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">
             <HelpCircle size={18} /> Help
-          </div>
+          </div> */}
         </nav>
       </div>
 
