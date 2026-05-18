@@ -1,4 +1,4 @@
-# Juridical AI - Moroccan Legal Assistant
+# AtlasLegalAI - Moroccan Legal Assistant
 
 A RAG (Retrieval-Augmented Generation) system for Moroccan law using Qwen 2.5 and ChromaDB.
 

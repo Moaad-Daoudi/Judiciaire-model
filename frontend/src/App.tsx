@@ -69,7 +69,7 @@ function App() {
       <main className="flex-1 flex flex-col overflow-hidden">
         {messages.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8">
-            <h1 className="text-4xl font-bold mb-4">Juridical AI</h1>
+            <h1 className="text-4xl font-bold mb-4">AtlasLegalAI</h1>
             <p className="text-slate-500 mb-12">Ask questions about Moroccan Law.</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
               {quickStarts.map((item, i) => (

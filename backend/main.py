@@ -24,8 +24,6 @@ class ChatRequest(BaseModel):
 async def chat_endpoint(request: ChatRequest):
     try:
         reply = rag_pipeline.generate_answer(request.message)
-        # Note: You might need to clean the reply string to remove the prompt part
-        # since model.generate often includes the input.
         return {"reply": reply}
     except Exception as e:
         import traceback

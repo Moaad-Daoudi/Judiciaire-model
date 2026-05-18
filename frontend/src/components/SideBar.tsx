@@ -4,14 +4,14 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
   return (
     // 1. Sidebar Background: The Deep Navy color
     <aside className="w-64 bg-white dark:bg-[#0f172a] text-slate-800 dark:text-white p-6 flex flex-col h-screen border-r border-slate-200 dark:border-slate-700 transition-colors duration-200">
-      
+
       {/* TOP SECTION: Logo & Navigation */}
       <div className="flex-1">
-        
+
         {/* Logo Area */}
         <div className="flex flex-col items-center mb-8 gap-2">
           <Scale className="text-blue-600 dark:text-blue-500" size={40} />
-          <h1 className="text-xl font-bold">Juridical AI</h1>
+          <h1 className="text-xl font-bold">AtlasLegalAI</h1>
         </div>
 
         {/* Navigation */}
@@ -38,7 +38,7 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
 
       {/* Theme Toggle */}
       <div className="mb-4">
-        <button 
+        <button
           onClick={() => setDarkMode(!darkMode)}
           className="w-full flex items-center justify-center gap-2 p-2 rounded-lg bg-slate-100 dark:bg-[#1e293b] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
         >
@@ -61,7 +61,7 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
           </div>
         </div>
       </div> */}
-      
+
     </aside>
   );
 }
