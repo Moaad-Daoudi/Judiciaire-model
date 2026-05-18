@@ -21,3 +21,6 @@ frontend/build/
 *.log
 *.sqlite3
 *:Zone.Identifier
+
+
+unsloth_compiled_cache
