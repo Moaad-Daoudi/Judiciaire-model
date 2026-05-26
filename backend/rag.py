@@ -67,33 +67,74 @@ class LegalRAGPipeline:
         embeddings = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large")
         self.vector_store = FAISS.from_documents(docs, embeddings)
 
-    def generate_answer(self, question: str):
+    def generate_answer(self, question: str, max_new_tokens: int = 512):
         if self.vector_store is None:
             return "RAG not initialized."
 
         # 1. Retrieval
-        retrieved_docs = self.vector_store.similarity_search(question, k=3)
-        context = "\n---\n".join([d.page_content for d in retrieved_docs])
+        retriever = self.vector_store.as_retriever(search_kwargs={"k": 4})
+        docs = retriever.invoke(question)
+
+        # ❌ if no documents → stop immediately
+        if not docs:
+            return "Information not found in legal context."
+
+        docs = docs[:4]
+
+        context = "\n\nLEGAL CONTEXT:\n"
+        context += "\n---\n".join([doc.page_content for doc in docs])
+
+        # =========================
+        # 🔥 DEBUG (VERY IMPORTANT)
+        # =========================
+        print("\n========== RETRIEVED CONTEXT ==========")
+        print(context)
+        print("=======================================\n")
         
         # 2. Prompting
-        system_prompt = "You are a Moroccan legal assistant. Use the following context: " + context
-        messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": question}]
+        system_prompt = """You are a Moroccan legal assistant specialized ONLY in Moroccan law.
+
+STRICT RULES:
+- Answer ONLY questions related to Moroccan law and legal matters.
+- If the question is not legal, refuse politely.
+- Do NOT invent laws, article numbers, or legal sources.
+- If the legal information is uncertain or missing from the context, say:
+  "I do not have enough verified legal information to answer accurately."
+- Use ONLY the provided legal context when available.
+- If the answer is not present in the retrieved context, say so clearly.
+- Always answer in the same language as the user.
+- Keep answers concise, professional, and legally focused.
+- Mention the law/article ONLY if explicitly present in the context.
+- Never fabricate article numbers.
+- Your responses are for legal information only and do not replace a lawyer.
+"""
+        messages = [
+            {"role": "system", "content": system_prompt + context},
+            {"role": "user", "content": question}
+        ]
         
-        # Tokenize
-        inputs = self.tokenizer.apply_chat_template(
-            messages, 
-            add_generation_prompt=True, 
-            return_tensors="pt",
-            return_dict=True
+        # Tokenize & Generate
+        prompt = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+
+        inputs = self.tokenizer(
+            [prompt],
+            return_tensors="pt"
         ).to("cuda")
         
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs, 
-                max_new_tokens=512,
-                do_sample=False
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+                repetition_penalty=1.15,
+                pad_token_id=self.tokenizer.eos_token_id,
+                eos_token_id=self.tokenizer.eos_token_id,
             )
             
         # Decode only the generated tokens (slice off the input)
         generated_tokens = outputs[0][inputs['input_ids'].shape[-1]:]
-        return self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
+        return self.tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()

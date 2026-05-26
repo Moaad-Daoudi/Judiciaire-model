@@ -42,8 +42,8 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
           onClick={() => setDarkMode(!darkMode)}
           className="w-full flex items-center justify-center gap-2 p-2 rounded-lg bg-slate-100 dark:bg-[#1e293b] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
         >
-          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-          <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
+          {darkMode ? <Moon size={18} /> : <Sun size={18} />}
+          <span>{darkMode ? "Dark Mode" : "Light Mode"}</span>
         </button>
       </div>
 

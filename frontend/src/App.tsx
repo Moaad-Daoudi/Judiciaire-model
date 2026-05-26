@@ -12,7 +12,13 @@ interface Message {
 
 function App() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
+    }
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   // Ref for auto-scrolling
@@ -31,8 +37,10 @@ function App() {
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);
 
@@ -105,7 +113,7 @@ function App() {
             <div ref={messagesEndRef} />
           </div>
         )}
-        <InputArea onSend={handleSendMessage} />
+        <InputArea onSend={handleSendMessage} isLoading={isLoading} />
       </main>
     </div>
   );
