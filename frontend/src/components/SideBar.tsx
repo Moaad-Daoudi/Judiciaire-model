@@ -1,6 +1,6 @@
-import { Scale, MessageSquare, History, Wrench, Settings, HelpCircle, Sun, Moon } from 'lucide-react';
+import { Scale, MessageSquare, History, Wrench, Settings, HelpCircle, Sun, Moon, Info } from 'lucide-react';
 
-export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, setDarkMode: (val: boolean) => void }) {
+export default function Sidebar({ darkMode, setDarkMode, currentView, setCurrentView }: { darkMode: boolean, setDarkMode: (val: boolean) => void, currentView?: string, setCurrentView?: (val: 'chat' | 'about') => void }) {
   return (
     // 1. Sidebar Background: The Deep Navy color
     <aside className="w-64 bg-white dark:bg-[#0f172a] text-slate-800 dark:text-white p-6 flex flex-col h-screen border-r border-slate-200 dark:border-slate-700 transition-colors duration-200">
@@ -17,8 +17,18 @@ export default function Sidebar({ darkMode, setDarkMode }: { darkMode: boolean, 
         {/* Navigation */}
         <nav className="space-y-1">
           {/* Active Item */}
-          <div className="bg-slate-100 dark:bg-[#1e293b] p-3 rounded-lg cursor-pointer flex items-center gap-3 font-medium">
+          <div
+            onClick={() => setCurrentView && setCurrentView('chat')}
+            className={`${currentView === 'chat' || !currentView ? 'bg-slate-100 dark:bg-[#1e293b]' : 'hover:bg-slate-50 dark:hover:bg-[#1e293b] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'} p-3 rounded-lg cursor-pointer flex items-center gap-3 font-medium transition`}
+          >
             <MessageSquare size={18} /> New Chat
+          </div>
+
+          <div
+            onClick={() => setCurrentView && setCurrentView('about')}
+            className={`${currentView === 'about' ? 'bg-slate-100 dark:bg-[#1e293b] text-slate-800 dark:text-white' : 'hover:bg-slate-50 dark:hover:bg-[#1e293b] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'} p-3 rounded-lg cursor-pointer flex items-center gap-3 font-medium transition`}
+          >
+            <Info size={18} /> À propos
           </div>
           {/* Standard Items */}
           {/* <div className="hover:bg-slate-50 dark:hover:bg-[#1e293b] p-3 rounded-lg cursor-pointer flex items-center gap-3 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">
