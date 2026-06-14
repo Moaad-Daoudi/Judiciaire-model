@@ -22,5 +22,5 @@ frontend/build/
 *.sqlite3
 *:Zone.Identifier
 
-
+.env
 unsloth_compiled_cache

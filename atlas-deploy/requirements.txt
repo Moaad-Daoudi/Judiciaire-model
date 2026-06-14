@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+torch --extra-index-url https://download.pytorch.org/whl/cpu
+transformers
+peft
+accelerate
+sentence-transformers
+langchain-community
+langchain-core
+faiss-cpu
